@@ -10,14 +10,14 @@ const products: Product[] = [
   },
   {
     id: 2,
-    name: "ExtravaganZZa",
+    name: "Extravaganza",
     image:
       "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/food/extravaganzza.png",
     price: 14.99,
   },
   {
     id: 3,
-    name: "MeatZZa",
+    name: "Meatza",
     image:
       "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/food/peperoni.png",
     price: 13.47,

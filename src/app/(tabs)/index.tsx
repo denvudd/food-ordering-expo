@@ -1,25 +1,13 @@
-import { View } from "@/components/Themed";
-import products from "../../../assets/data/products";
-import ProductListItem from "@/components/modules/ProductListItem";
-import { FlatList, StyleSheet } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
+import React from "react";
+import { Redirect } from "expo-router";
 
-export default function ProductDetailsScreen() {
+const TabsIndexScreen = () => {
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={products}
-        renderItem={({ item }) => <ProductListItem product={item} />}
-        numColumns={2}
-        contentContainerStyle={{ gap: 10, padding: 10 }}
-        columnWrapperStyle={{ gap: 10 }}
-      />
-    </View>
+    <Redirect href={`/menu/`} />
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    width: "100%",
-    height: "100%",
-  },
-});
+export default TabsIndexScreen;
+
+const styles = StyleSheet.create({});
