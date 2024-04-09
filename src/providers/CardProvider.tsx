@@ -4,12 +4,14 @@ import { CartItem, Product } from "@/types";
 
 interface CartContextType {
   items: CartItem[];
+  total: number;
   handleAddItem: (product: Product, size: CartItem["size"]) => void;
   handleUpdateQuantity: (id: string, quantity: -1 | 1) => void;
 }
 
 export const CartContext = React.createContext<CartContextType>({
   items: [],
+  total: 0,
   handleAddItem: () => {},
   handleUpdateQuantity: () => {},
 });
@@ -59,9 +61,14 @@ const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     setItems(filteredItems);
   };
 
+  const total = items.reduce(
+    (sum, item) => (sum += item.product.price * item.quantity),
+    0
+  );
+
   return (
     <CartContext.Provider
-      value={{ items, handleAddItem, handleUpdateQuantity }}
+      value={{ items, handleAddItem, handleUpdateQuantity, total }}
     >
       {children}
     </CartContext.Provider>

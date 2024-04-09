@@ -12,9 +12,10 @@ type ProductListItemProps = {
 
 const ProductListItem = ({ product }: ProductListItemProps) => {
   const segments = useSegments();
+  const definedPath = segments[0] as "(user)" | "(admin)";
   
   return (
-    <Link href={`/menu/${product.id}`} asChild>
+    <Link href={`/${definedPath}/menu/${product.id}`} asChild>
       <Pressable style={styles.container}>
         <Image
           source={{ uri: product.image || defaultPizzaImage }}

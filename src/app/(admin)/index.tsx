@@ -4,7 +4,7 @@ import { Redirect } from "expo-router";
 
 const TabsIndexScreen = () => {
   return (
-    <Redirect href={`/menu/`} />
+    <Redirect href={`/(admin)/menu/`} />
   );
 };
 

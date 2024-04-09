@@ -2,7 +2,7 @@ import React from "react";
 import { Text, View } from "@/components/Themed";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import products from "../../../../assets/data/products";
-import { Image, Pressable, StyleSheet } from "react-native";
+import { Image, Pressable, ScrollView, StyleSheet } from "react-native";
 import { defaultPizzaImage } from "@/components/modules/ProductListItem";
 import Button from "@/components/ui/Button";
 import { PizzaSize, Product } from "@/types";
@@ -36,42 +36,46 @@ const ProductDetailsScreen: React.FC<ProductDetailsScreenProps> = ({}) => {
 
   return (
     <View style={styles.container}>
-      <Stack.Screen options={{ title: product?.name }} />
+      <ScrollView style={[styles.container, { padding: 0 }]}>
+        <Stack.Screen options={{ title: product?.name }} />
 
-      <Image
-        style={styles.image}
-        source={{ uri: product.image || defaultPizzaImage }}
-      />
+        <Image
+          style={styles.image}
+          source={{ uri: product.image || defaultPizzaImage }}
+        />
 
-      <Text style={styles.selectLabel}>Select size:</Text>
-      <View style={styles.sizes}>
-        {sizes.map((size) => (
-          <Pressable
-            onPress={() => setSelectedSize(size)}
-            key={size}
-            style={[
-              styles.size,
-              {
-                backgroundColor: selectedSize === size ? "gainsboro" : "white",
-              },
-            ]}
-          >
-            <Text
+        <Text style={styles.selectLabel}>Select size:</Text>
+        <View style={styles.sizes}>
+          {sizes.map((size) => (
+            <Pressable
+              onPress={() => setSelectedSize(size)}
+              key={size}
               style={[
-                styles.sizeText,
+                styles.size,
                 {
-                  color: selectedSize === size ? "black" : "gray",
+                  backgroundColor:
+                    selectedSize === size ? "gainsboro" : "white",
                 },
               ]}
             >
-              {size}
-            </Text>
-          </Pressable>
-        ))}
-      </View>
+              <Text
+                style={[
+                  styles.sizeText,
+                  {
+                    color: selectedSize === size ? "black" : "gray",
+                  },
+                ]}
+              >
+                {size}
+              </Text>
+            </Pressable>
+          ))}
+        </View>
 
-      <Text style={styles.price}>${product.price}</Text>
-      <Button text="Add to cart" onPress={handleAddToCart} />
+        <Text style={styles.price}>${product.price}</Text>
+        <Text style={styles.title}>{product.name}</Text>
+        <Button text="Add to cart" onPress={handleAddToCart} />
+      </ScrollView>
     </View>
   );
 };
@@ -91,6 +95,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "700",
     marginTop: "auto",
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "700",
+    marginVertical: 10,
   },
   selectLabel: {
     fontSize: 16,
