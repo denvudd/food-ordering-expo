@@ -9,7 +9,14 @@ type ButtonProps = {
 const Button = React.forwardRef<View | null, ButtonProps>(
   ({ text, ...pressableProps }, ref) => {
     return (
-      <Pressable ref={ref} {...pressableProps} style={styles.container}>
+      <Pressable
+        ref={ref}
+        {...pressableProps}
+        style={({ pressed }) => [
+          styles.container,
+          pressed ? { opacity: 0.8 } : {},
+        ]}
+      >
         <Text style={styles.text}>{text}</Text>
       </Pressable>
     );
