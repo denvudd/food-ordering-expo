@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "expo-router";
-import { View } from "react-native";
 import Button from "@/components/ui/Button";
+import { View } from "@/components/Themed";
 
 const IndexScreen = () => {
   return (

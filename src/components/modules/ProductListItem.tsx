@@ -1,7 +1,8 @@
-import { StyleSheet, Text, View, Image, Pressable } from "react-native";
+import { StyleSheet, Image, Pressable } from "react-native";
 import { Link, useSegments } from "expo-router";
 import Colors from "@/constants/Colors";
 import { Product } from "@/types";
+import { Text } from "../Themed";
 
 export const defaultPizzaImage =
   "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/food/default.png";

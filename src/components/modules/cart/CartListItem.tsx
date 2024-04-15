@@ -1,10 +1,11 @@
-import { View, Text, StyleSheet, Image, Pressable } from "react-native";
 import React from "react";
+import { StyleSheet, Image } from "react-native";
 import { useCart } from "@/hooks/useCart";
 import { defaultPizzaImage } from "../ProductListItem";
 import { FontAwesome } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
 import { CartItem } from "@/types";
+import { Text, View } from "@/components/Themed";
 
 type CartListItemProps = {
   cartItem: CartItem;

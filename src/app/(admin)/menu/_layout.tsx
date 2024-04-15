@@ -17,7 +17,7 @@ const MenuLayout: React.FC<MenuLayoutProps> = ({}) => {
         options={{
           title: "Menu",
           headerRight: () => (
-            <Link href="/cart" asChild>
+            <Link href="/(admin)/menu/create" asChild>
               <Pressable>
                 {({ pressed }) => (
                   <FontAwesome
@@ -38,7 +38,7 @@ const MenuLayout: React.FC<MenuLayoutProps> = ({}) => {
         options={{
           headerRight: () => (
             <Link href="/cart" asChild>
-              <Pressable>
+              <Pressable>          
                 {({ pressed }) => (
                   <FontAwesome
                     name="pencil"

@@ -19,6 +19,8 @@ const ProductDetailsScreen: React.FC<ProductDetailsScreenProps> = ({}) => {
     (product) => product.id.toString() === productId
   );
 
+  console.log(productId)
+
   if (!product) {
     return <Text>Product not found.</Text>;
   }
