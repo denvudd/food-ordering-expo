@@ -37,7 +37,7 @@ const MenuLayout: React.FC<MenuLayoutProps> = ({}) => {
         name="[productId]"
         options={{
           headerRight: () => (
-            <Link href="/cart" asChild>
+            <Link href="/(admin)/menu/create" asChild>
               <Pressable>          
                 {({ pressed }) => (
                   <FontAwesome

@@ -1,17 +1,21 @@
 import React from "react";
 import { Text, View } from "@/components/Themed";
-import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { Link, Stack, useLocalSearchParams, useRouter } from "expo-router";
 import products from "../../../../assets/data/products";
 import { Image, Pressable, ScrollView, StyleSheet } from "react-native";
 import { defaultPizzaImage } from "@/components/modules/ProductListItem";
 import Button from "@/components/ui/Button";
 import { PizzaSize, Product } from "@/types";
 import { useCart } from "@/hooks/useCart";
+import { FontAwesome } from "@expo/vector-icons";
+import Colors from "@/constants/Colors";
+import { useColorScheme } from "@/hooks/useColorScheme";
 
 interface ProductDetailsScreenProps {}
 
 const ProductDetailsScreen: React.FC<ProductDetailsScreenProps> = ({}) => {
   const router = useRouter();
+  const colorScheme = useColorScheme();
   const { productId } = useLocalSearchParams();
   const { handleAddItem } = useCart();
 
@@ -19,7 +23,7 @@ const ProductDetailsScreen: React.FC<ProductDetailsScreenProps> = ({}) => {
     (product) => product.id.toString() === productId
   );
 
-  console.log(productId)
+  console.log(productId);
 
   if (!product) {
     return <Text>Product not found.</Text>;
@@ -27,6 +31,24 @@ const ProductDetailsScreen: React.FC<ProductDetailsScreenProps> = ({}) => {
 
   return (
     <View style={styles.container}>
+      <Stack.Screen
+        options={{
+          headerRight: () => (
+            <Link href={`/(admin)/menu/create?productId=${productId}`} asChild>
+              <Pressable>
+                {({ pressed }) => (
+                  <FontAwesome
+                    name="pencil"
+                    size={25}
+                    color={Colors[colorScheme ?? "light"].text}
+                    style={{ opacity: pressed ? 0.5 : 1 }}
+                  />
+                )}
+              </Pressable>
+            </Link>
+          ),
+        }}
+      />
       <ScrollView style={[styles.container, { padding: 0 }]}>
         <Stack.Screen options={{ title: product?.name }} />
 

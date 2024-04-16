@@ -1,4 +1,4 @@
-import { Image, StyleSheet, TextInput } from "react-native";
+import { Alert, Image, StyleSheet, TextInput } from "react-native";
 import React from "react";
 import { Text, View } from "@/components/Themed";
 import Button from "@/components/ui/Button";
@@ -6,19 +6,23 @@ import { DismissKeyboardView } from "@/components/common/DismissKeyboard";
 import { defaultPizzaImage } from "@/components/modules/ProductListItem";
 import Colors from "@/constants/Colors";
 import * as ImagePicker from "expo-image-picker";
+import { Stack, useLocalSearchParams } from "expo-router";
 
 const CreateProductScreen = () => {
+  const { productId } = useLocalSearchParams();
+  const isEditing = !!productId;
+
   const [name, setName] = React.useState<string>("");
   const [price, setPrice] = React.useState<number>(0);
   const [errors, setErrors] = React.useState<string>("");
   const [image, setImage] = React.useState<string | null>(null);
 
-  const handleResetFields = () => {
+  const resetFields = () => {
     setName("");
     setPrice(0);
   };
 
-  const handleValidateFields = () => {
+  const validateFields = () => {
     if (!name) {
       setErrors("Name is required");
       return false;
@@ -37,12 +41,28 @@ const CreateProductScreen = () => {
     return true;
   };
 
-  const handleCreateProduct = () => {
-    if (!handleValidateFields()) {
+  const updateProduct = () => {
+    if (!validateFields()) {
       return undefined;
     }
 
-    handleResetFields();
+    resetFields();
+  };
+
+  const createProduct = () => {
+    if (!validateFields()) {
+      return undefined;
+    }
+
+    resetFields();
+  };
+
+  const handleSubmit = () => {
+    if (isEditing) {
+      updateProduct();
+    } else {
+      createProduct();
+    }
   };
 
   const handlePickImage = async () => {
@@ -58,8 +78,26 @@ const CreateProductScreen = () => {
     }
   };
 
+  const handleConfirmDelete = () => {
+    Alert.alert("Confirm", "Are you sure you want to delete this product?", [
+      {
+        text: "Cancel",
+      },
+      {
+        text: "Delete",
+        style: "destructive",
+        onPress: () => {
+          console.warn("DELETE");
+        },
+      },
+    ]);
+  };
+
   return (
     <DismissKeyboardView style={styles.container}>
+      <Stack.Screen
+        options={{ title: isEditing ? "Edit Product" : "Create Product" }}
+      />
       <Image
         source={{ uri: image || defaultPizzaImage }}
         style={styles.image}
@@ -84,7 +122,15 @@ const CreateProductScreen = () => {
       />
 
       <Text style={{ color: "red" }}>{errors}</Text>
-      <Button text="Create" onPress={handleCreateProduct} />
+      <Button
+        text={isEditing ? "Update Product" : "Create Product"}
+        onPress={handleSubmit}
+      />
+      {isEditing && (
+        <Text onPress={handleConfirmDelete} style={styles.selectImageButton}>
+          Delete Product
+        </Text>
+      )}
     </DismissKeyboardView>
   );
 };
