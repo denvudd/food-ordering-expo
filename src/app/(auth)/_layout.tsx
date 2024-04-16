@@ -1,6 +1,13 @@
-import { Stack } from "expo-router";
+import { useAuth } from "@/hooks/useAuth";
+import { Redirect, Stack } from "expo-router";
 
 const AuthLayout = () => {
+  const { session } = useAuth();
+
+  if (session) {
+    return <Redirect href="/" />
+  }
+
   return <Stack />;
 };
 

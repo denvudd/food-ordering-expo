@@ -2,14 +2,26 @@ import { TextInput, StyleSheet, Alert } from 'react-native';
 import React, { useState } from 'react';
 import Colors from '../../constants/Colors';
 import { Link, Stack } from 'expo-router';
-import { Text, View } from '@/components/Themed';
+import { Text } from '@/components/Themed';
 import Button from '@/components/ui/Button';
 import { DismissKeyboardView } from '@/components/common/DismissKeyboard';
+import { supabase } from '@/lib/supabase';
 
 const SignUpScreen = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
+
+  async function handleSignUpWithEmail() {
+    setLoading(true);
+    const { error } = await supabase.auth.signUp({
+      email: email,
+      password: password,
+    });
+  
+    if (error) Alert.alert(error.message);
+    setLoading(false);
+  }
 
   return (
     <DismissKeyboardView style={styles.container}>
@@ -33,7 +45,7 @@ const SignUpScreen = () => {
       />
 
       <Button
-        onPress={() => {}}
+        onPress={handleSignUpWithEmail}
         disabled={loading}
         text={loading ? 'Creating account...' : 'Create account'}
       />

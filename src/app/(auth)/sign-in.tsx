@@ -1,15 +1,27 @@
-import { TextInput, StyleSheet } from 'react-native';
+import { TextInput, StyleSheet, Alert } from 'react-native';
 import React, { useState } from 'react';
 import Colors from '../../constants/Colors';
 import { Link, Stack } from 'expo-router';
 import { Text, View } from '@/components/Themed';
 import Button from '@/components/ui/Button';
 import { DismissKeyboardView } from '@/components/common/DismissKeyboard';
+import { supabase } from '@/lib/supabase';
 
 const SignInScreen = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
+
+  async function handleSignInWithEmail() {
+    setLoading(true);
+    const { error } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: password,
+    });
+  
+    if (error) Alert.alert(error.message);
+    setLoading(false);
+  }
 
   return (
     <DismissKeyboardView style={styles.container}>
@@ -33,7 +45,7 @@ const SignInScreen = () => {
       />
 
       <Button
-        onPress={() => {}}
+        onPress={handleSignInWithEmail}
         disabled={loading}
         text={loading ? 'Signing in...' : 'Sign in'}
       />
