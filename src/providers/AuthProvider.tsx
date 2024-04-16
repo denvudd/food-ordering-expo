@@ -30,12 +30,12 @@ const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
       setSession(session);
 
       if (session) {
-        // fetch profile
         const { data } = await supabase
           .from("profiles")
           .select("*")
           .eq("id", session.user.id)
           .single();
+          
         setProfile(data || null);
       }
 
