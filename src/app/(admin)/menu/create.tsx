@@ -19,13 +19,17 @@ import {
   useProduct,
   useUpdateProduct,
 } from "@/api/products";
+import * as FileSystem from "expo-file-system";
+import { randomUUID } from "expo-crypto";
+import { supabase } from "@/lib/supabase";
+import { decode } from "base64-arraybuffer";
 
 const CreateProductScreen = () => {
   const router = useRouter();
   const { productId } = useLocalSearchParams();
-  const parsedProductId = parseFloat(
-    typeof productId === "string" ? productId : productId[0]
-  );
+  const parsedProductId = productId
+    ? parseFloat(typeof productId === "string" ? productId : productId[0])
+    : undefined;
   const isEditing = !!productId;
 
   const [name, setName] = React.useState<string>("");
@@ -34,7 +38,7 @@ const CreateProductScreen = () => {
   const [image, setImage] = React.useState<string | null>(null);
 
   const { data: existingProduct, isLoading: isExistingProductLoading } =
-    useProduct(parsedProductId);
+    useProduct(parsedProductId as number, !!parsedProductId);
   const { mutate: insertProduct } = useInsertProduct();
   const { mutate: updateProduct } = useUpdateProduct();
   const { mutate: deleteProduct } = useDeleteProduct();
@@ -78,7 +82,7 @@ const CreateProductScreen = () => {
 
     updateProduct(
       {
-        id: parsedProductId,
+        id: parsedProductId as number,
         name,
         price,
         image,
@@ -91,16 +95,18 @@ const CreateProductScreen = () => {
     );
   };
 
-  const createProduct = () => {
+  const createProduct = async () => {
     if (!validateFields()) {
       return undefined;
     }
+
+    const imagePath = await uploadImage();
 
     insertProduct(
       {
         name,
         price,
-        image,
+        image: imagePath,
       },
       {
         onSuccess: () => {
@@ -111,11 +117,31 @@ const CreateProductScreen = () => {
     );
   };
 
-  const handleSubmit = () => {
+  const uploadImage = async () => {
+    if (!image?.startsWith("file://")) {
+      return;
+    }
+
+    const base64 = await FileSystem.readAsStringAsync(image, {
+      encoding: "base64",
+    });
+    const filePath = `${randomUUID()}.png`;
+    const contentType = "image/png";
+
+    const { data, error } = await supabase.storage
+      .from("product-images")
+      .upload(filePath, decode(base64), { contentType });
+
+    if (data) {
+      return data.path;
+    }
+  };
+
+  const handleSubmit = async () => {
     if (isEditing) {
       handleUpdateProduct();
     } else {
-      createProduct();
+      await createProduct();
     }
   };
 
@@ -141,7 +167,7 @@ const CreateProductScreen = () => {
         text: "Delete",
         style: "destructive",
         onPress: () => {
-          deleteProduct(parsedProductId, {
+          deleteProduct(parsedProductId as number, {
             onSuccess: () => {
               router.replace("/(admin)");
             },

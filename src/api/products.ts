@@ -17,9 +17,10 @@ export const useProductList = () => {
   });
 };
 
-export const useProduct = (productId: number) => {
+export const useProduct = (productId: number, enabled?: boolean) => {
   return useQuery({
     queryKey: ["productId", productId],
+    enabled,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("products")

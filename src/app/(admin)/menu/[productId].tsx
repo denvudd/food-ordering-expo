@@ -8,6 +8,7 @@ import Colors from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { useProduct } from "@/api/products";
 import { ActivityIndicator } from "react-native";
+import RemoteImage from "@/components/modules/RemoteImage";
 
 interface ProductDetailsScreenProps {}
 
@@ -51,9 +52,10 @@ const ProductDetailsScreen: React.FC<ProductDetailsScreenProps> = ({}) => {
       <ScrollView style={[styles.container, { padding: 0 }]}>
         <Stack.Screen options={{ title: product?.name }} />
 
-        <Image
+        <RemoteImage
           style={styles.image}
-          source={{ uri: product?.image || defaultPizzaImage }}
+          path={product?.image}
+          fallback={defaultPizzaImage}
         />
         <Text style={styles.price}>${product?.price}</Text>
         <Text style={styles.title}>{product?.name}</Text>

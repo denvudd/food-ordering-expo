@@ -4,6 +4,7 @@ import { Text, View } from "@/components/Themed";
 import { OrderItem } from "@/types";
 import { defaultPizzaImage } from "../ProductListItem";
 import Colors from "@/constants/Colors";
+import RemoteImage from "../RemoteImage";
 
 interface OrderedProductProps {
   order: OrderItem;
@@ -12,10 +13,10 @@ interface OrderedProductProps {
 const OrderedProduct: React.FC<OrderedProductProps> = ({ order }) => {
   return (
     <View style={styles.container}>
-      <Image
-        source={{ uri: order.products.image || defaultPizzaImage }}
+      <RemoteImage
         style={styles.image}
-        resizeMode="contain"
+        path={order.products?.image}
+        fallback={defaultPizzaImage}
       />
 
       <View style={{ flex: 1 }}>

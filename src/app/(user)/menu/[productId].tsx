@@ -13,6 +13,7 @@ import Button from "@/components/ui/Button";
 import { PizzaSize } from "@/types";
 import { useCart } from "@/hooks/useCart";
 import { useProduct } from "@/api/products";
+import RemoteImage from "@/components/modules/RemoteImage";
 
 interface ProductDetailsScreenProps {}
 
@@ -50,9 +51,10 @@ const ProductDetailsScreen: React.FC<ProductDetailsScreenProps> = ({}) => {
       <ScrollView style={[styles.container, { padding: 0 }]}>
         <Stack.Screen options={{ title: product?.name }} />
 
-        <Image
+        <RemoteImage
           style={styles.image}
-          source={{ uri: product?.image || defaultPizzaImage }}
+          path={product?.image}
+          fallback={defaultPizzaImage}
         />
 
         <Text style={styles.selectLabel}>Select size:</Text>

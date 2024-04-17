@@ -6,20 +6,21 @@ import { FontAwesome } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
 import { CartItem } from "@/types";
 import { Text, View } from "@/components/Themed";
+import RemoteImage from "../RemoteImage";
 
 type CartListItemProps = {
   cartItem: CartItem;
 };
 
 const CartListItem = ({ cartItem }: CartListItemProps) => {
-    const { handleUpdateQuantity } = useCart();
+  const { handleUpdateQuantity } = useCart();
 
   return (
     <View style={styles.container}>
-      <Image
-        source={{ uri: cartItem.product.image || defaultPizzaImage }}
+      <RemoteImage
         style={styles.image}
-        resizeMode="contain"
+        path={cartItem.product?.image}
+        fallback={defaultPizzaImage}
       />
 
       <View style={{ flex: 1 }}>
@@ -31,7 +32,7 @@ const CartListItem = ({ cartItem }: CartListItemProps) => {
       </View>
       <View style={styles.quantitySelector}>
         <FontAwesome
-            onPress={() => handleUpdateQuantity(cartItem.id, -1)}
+          onPress={() => handleUpdateQuantity(cartItem.id, -1)}
           name="minus"
           color="gray"
           style={{ padding: 5 }}
@@ -39,7 +40,7 @@ const CartListItem = ({ cartItem }: CartListItemProps) => {
 
         <Text style={styles.quantity}>{cartItem.quantity}</Text>
         <FontAwesome
-            onPress={() => handleUpdateQuantity(cartItem.id, 1)}
+          onPress={() => handleUpdateQuantity(cartItem.id, 1)}
           name="plus"
           color="gray"
           style={{ padding: 5 }}
