@@ -70,7 +70,7 @@ export const useUpdateProduct = () => {
     mutationFn: async (data: {
       id: number;
       name: string;
-      image: string | null;
+      image: string | null | undefined;
       price: number;
     }) => {
       const { data: newProduct, error } = await supabase

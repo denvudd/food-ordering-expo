@@ -75,17 +75,19 @@ const CreateProductScreen = () => {
     return true;
   };
 
-  const handleUpdateProduct = () => {
+  const handleUpdateProduct = async () => {
     if (!validateFields()) {
       return undefined;
     }
+
+    const imagePath = await uploadImage();
 
     updateProduct(
       {
         id: parsedProductId as number,
         name,
         price,
-        image,
+        image: imagePath,
       },
       {
         onSuccess: () => {
@@ -139,7 +141,7 @@ const CreateProductScreen = () => {
 
   const handleSubmit = async () => {
     if (isEditing) {
-      handleUpdateProduct();
+      await handleUpdateProduct();
     } else {
       await createProduct();
     }
