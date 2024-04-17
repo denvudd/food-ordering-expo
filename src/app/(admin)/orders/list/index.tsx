@@ -3,13 +3,11 @@ import React from "react";
 import OrderListItem from "@/components/modules/order/OrderListItem";
 import { useAdminOrderList } from "@/api/orders";
 import { Text } from "@/components/Themed";
+import { useInsertOrderSubscription } from "@/api/subscription";
 
 const OrdersScreen = () => {
-  const {
-    data: orders,
-    isLoading,
-    error,
-  } = useAdminOrderList();
+  const { data: orders, isLoading, error } = useAdminOrderList();
+  useInsertOrderSubscription();
 
   if (isLoading) {
     return <ActivityIndicator size="large" style={styles.loader} />;

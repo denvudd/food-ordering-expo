@@ -1,19 +1,37 @@
-import { ActivityIndicator, FlatList, Pressable, StyleSheet } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  Pressable,
+  StyleSheet,
+} from "react-native";
 import React from "react";
 import { Stack, useLocalSearchParams } from "expo-router";
 import { Text, View } from "@/components/Themed";
 import OrderListItem from "@/components/modules/order/OrderListItem";
 import OrderedProduct from "@/components/modules/order/OrderedProduct";
-import { OrderStatusList } from "@/types";
+import { OrderStatus, OrderStatusList } from "@/types";
 import Colors from "@/constants/Colors";
-import { useOrder } from "@/api/orders";
+import { useOrder, useUpdateOrder } from "@/api/orders";
+import { useUpdateOrderSubscription } from "@/api/subscription";
 
 const OrderDetailsScreen = () => {
   const { orderId } = useLocalSearchParams();
   const parsedOrderId = parseFloat(
     typeof orderId === "string" ? orderId : orderId[0]
   );
+
   const { data: order, isLoading, error } = useOrder(parsedOrderId);
+  const { mutate: updateOrder } = useUpdateOrder();
+  useUpdateOrderSubscription(parsedOrderId)
+
+  const updateStatus = (status: OrderStatus) => {
+    updateOrder({
+      id: parsedOrderId,
+      updatedFields: {
+        status,
+      },
+    });
+  };
 
   if (isLoading) {
     return <ActivityIndicator style={styles.loader} size="large" />;
@@ -42,7 +60,7 @@ const OrderDetailsScreen = () => {
               {OrderStatusList.map((status) => (
                 <Pressable
                   key={status}
-                  onPress={() => {}}
+                  onPress={() => updateStatus(status)}
                   style={{
                     borderColor: Colors.light.tint,
                     borderWidth: 1,
