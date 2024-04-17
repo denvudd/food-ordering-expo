@@ -5,11 +5,12 @@ import dayjs from "dayjs";
 import { Link, useSegments } from "expo-router";
 import { Order } from "@/types";
 import { Text, View } from "../../Themed";
+import { Tables } from "@/database.types";
 
 dayjs.extend(relativeTime);
 
 type OrderListItemProps = {
-  order: Order;
+  order: Tables<"orders">;
 };
 
 const OrderListItem = ({ order }: OrderListItemProps) => {
