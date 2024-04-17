@@ -10,23 +10,26 @@ import { useCart } from "@/hooks/useCart";
 import { FontAwesome } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { useProduct } from "@/api/products";
+import { ActivityIndicator } from "react-native";
 
 interface ProductDetailsScreenProps {}
 
 const ProductDetailsScreen: React.FC<ProductDetailsScreenProps> = ({}) => {
-  const router = useRouter();
-  const colorScheme = useColorScheme();
   const { productId } = useLocalSearchParams();
-  const { handleAddItem } = useCart();
+  const colorScheme = useColorScheme();
 
-  const product = products.find(
-    (product) => product.id.toString() === productId
+  const parsedProductId = parseFloat(
+    typeof productId === "string" ? productId : productId[0]
   );
+  const { data: product, error, isLoading } = useProduct(parsedProductId);
 
-  console.log(productId);
+  if (isLoading) {
+    return <ActivityIndicator style={styles.loader} size="large" />;
+  }
 
-  if (!product) {
-    return <Text>Product not found.</Text>;
+  if (error) {
+    return <Text>Failed to fetch product</Text>;
   }
 
   return (
@@ -68,6 +71,11 @@ export default ProductDetailsScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 10,
+  },
+  loader: {
+    flex: 1,
+    justifyContent: "center",
     padding: 10,
   },
   image: {

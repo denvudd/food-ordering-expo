@@ -1,4 +1,10 @@
-import { Alert, Image, StyleSheet, TextInput } from "react-native";
+import {
+  ActivityIndicator,
+  Alert,
+  Image,
+  StyleSheet,
+  TextInput,
+} from "react-native";
 import React from "react";
 import { Text, View } from "@/components/Themed";
 import Button from "@/components/ui/Button";
@@ -6,16 +12,40 @@ import { DismissKeyboardView } from "@/components/common/DismissKeyboard";
 import { defaultPizzaImage } from "@/components/modules/ProductListItem";
 import Colors from "@/constants/Colors";
 import * as ImagePicker from "expo-image-picker";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import {
+  useDeleteProduct,
+  useInsertProduct,
+  useProduct,
+  useUpdateProduct,
+} from "@/api/products";
 
 const CreateProductScreen = () => {
+  const router = useRouter();
   const { productId } = useLocalSearchParams();
+  const parsedProductId = parseFloat(
+    typeof productId === "string" ? productId : productId[0]
+  );
   const isEditing = !!productId;
 
   const [name, setName] = React.useState<string>("");
   const [price, setPrice] = React.useState<number>(0);
   const [errors, setErrors] = React.useState<string>("");
   const [image, setImage] = React.useState<string | null>(null);
+
+  const { data: existingProduct, isLoading: isExistingProductLoading } =
+    useProduct(parsedProductId);
+  const { mutate: insertProduct } = useInsertProduct();
+  const { mutate: updateProduct } = useUpdateProduct();
+  const { mutate: deleteProduct } = useDeleteProduct();
+
+  React.useEffect(() => {
+    if (existingProduct) {
+      setName(existingProduct.name);
+      setPrice(existingProduct.price);
+      setImage(existingProduct.image);
+    }
+  }, [existingProduct]);
 
   const resetFields = () => {
     setName("");
@@ -41,12 +71,24 @@ const CreateProductScreen = () => {
     return true;
   };
 
-  const updateProduct = () => {
+  const handleUpdateProduct = () => {
     if (!validateFields()) {
       return undefined;
     }
 
-    resetFields();
+    updateProduct(
+      {
+        id: parsedProductId,
+        name,
+        price,
+        image,
+      },
+      {
+        onSuccess: () => {
+          router.back();
+        },
+      }
+    );
   };
 
   const createProduct = () => {
@@ -54,12 +96,24 @@ const CreateProductScreen = () => {
       return undefined;
     }
 
-    resetFields();
+    insertProduct(
+      {
+        name,
+        price,
+        image,
+      },
+      {
+        onSuccess: () => {
+          resetFields();
+          router.back();
+        },
+      }
+    );
   };
 
   const handleSubmit = () => {
     if (isEditing) {
-      updateProduct();
+      handleUpdateProduct();
     } else {
       createProduct();
     }
@@ -87,11 +141,19 @@ const CreateProductScreen = () => {
         text: "Delete",
         style: "destructive",
         onPress: () => {
-          console.warn("DELETE");
+          deleteProduct(parsedProductId, {
+            onSuccess: () => {
+              router.replace("/(admin)");
+            },
+          });
         },
       },
     ]);
   };
+
+  if (isExistingProductLoading) {
+    return <ActivityIndicator style={styles.loader} size="large" />;
+  }
 
   return (
     <DismissKeyboardView style={styles.container}>
@@ -109,6 +171,7 @@ const CreateProductScreen = () => {
       <Text style={styles.label}>Name</Text>
       <TextInput
         placeholder="Margherita"
+        value={name}
         style={styles.input}
         onChangeText={setName}
       />
@@ -117,7 +180,8 @@ const CreateProductScreen = () => {
       <TextInput
         placeholder="9.99"
         keyboardType="numeric"
-        onChangeText={(value) => setPrice(+value)}
+        value={price.toString()}
+        onChangeText={(value) => setPrice(parseFloat(value))}
         style={styles.input}
       />
 
@@ -153,6 +217,11 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: Colors.light.tint,
     marginVertical: 10,
+  },
+  loader: {
+    flex: 1,
+    justifyContent: "center",
+    padding: 10,
   },
   input: {
     borderWidth: 1,

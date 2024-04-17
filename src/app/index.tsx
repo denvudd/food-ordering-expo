@@ -13,13 +13,13 @@ const IndexScreen = () => {
     return <ActivityIndicator />;
   }
 
-  if (!session) {
-    return <Redirect href="/sign-in" />;
-  }
+  // if (!session) {
+  //   return <Redirect href="/sign-in" />;
+  // }
 
-  if (!isAdmin) {
-    return <Redirect href="/(user)" />
-  }
+  // if (!isAdmin) {
+  //   return <Redirect href="/(user)" />
+  // }
 
   return (
     <View style={{ flex: 1, justifyContent: "center", padding: 10 }}>
@@ -29,13 +29,13 @@ const IndexScreen = () => {
       <Link href={"/(admin)"} asChild>
         <Button text="Admin" />
       </Link>
-      {/* <Link href={"/sign-in"} asChild>
+      <Link href={"/sign-in"} asChild>
         <Button text="Sign In" />
       </Link>
       <Link href={"/sign-up"} asChild>
         <Button text="Sign Up" />
       </Link>
-      <Button text="Sign Out" onPress={() => supabase.auth.signOut()} /> */}
+      <Button text="Sign Out" onPress={() => supabase.auth.signOut()} />
     </View>
   );
 };

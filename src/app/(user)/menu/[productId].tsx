@@ -2,11 +2,18 @@ import React from "react";
 import { Text, View } from "@/components/Themed";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import products from "../../../../assets/data/products";
-import { Image, Pressable, ScrollView, StyleSheet } from "react-native";
+import {
+  ActivityIndicator,
+  Image,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+} from "react-native";
 import { defaultPizzaImage } from "@/components/modules/ProductListItem";
 import Button from "@/components/ui/Button";
-import { PizzaSize, Product } from "@/types";
+import { PizzaSize } from "@/types";
 import { useCart } from "@/hooks/useCart";
+import { useProduct } from "@/api/products";
 
 interface ProductDetailsScreenProps {}
 
@@ -17,14 +24,19 @@ const ProductDetailsScreen: React.FC<ProductDetailsScreenProps> = ({}) => {
   const { productId } = useLocalSearchParams();
   const { handleAddItem } = useCart();
 
-  const product = products.find(
-    (product) => product.id.toString() === productId
+  const parsedProductId = parseFloat(
+    typeof productId === "string" ? productId : productId[0]
   );
+  const { data: product, error, isLoading } = useProduct(parsedProductId);
 
   const [selectedSize, setSelectedSize] = React.useState<PizzaSize>("M");
 
-  if (!product) {
-    return <Text>Product not found.</Text>;
+  if (isLoading) {
+    return <ActivityIndicator style={styles.loader} size="large" />;
+  }
+
+  if (error) {
+    return <Text>Failed to fetch product</Text>;
   }
 
   const handleAddToCart = () => {
@@ -90,6 +102,11 @@ const styles = StyleSheet.create({
   image: {
     width: "100%",
     aspectRatio: 1,
+  },
+  loader: {
+    flex: 1,
+    justifyContent: "center",
+    padding: 10,
   },
   price: {
     fontSize: 18,
