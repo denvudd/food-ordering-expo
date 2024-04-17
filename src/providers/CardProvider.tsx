@@ -1,11 +1,12 @@
 import React from "react";
 import { randomUUID } from "expo-crypto";
-import { CartItem, Product } from "@/types";
+import { CartItem } from "@/types";
+import { Tables } from "@/database.types";
 
 interface CartContextType {
   items: CartItem[];
   total: number;
-  handleAddItem: (product: Product, size: CartItem["size"]) => void;
+  handleAddItem: (product: Tables<"products">, size: CartItem["size"]) => void;
   handleUpdateQuantity: (id: string, quantity: -1 | 1) => void;
 }
 

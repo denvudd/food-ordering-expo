@@ -1,12 +1,8 @@
 import React from "react";
 import { Text, View } from "@/components/Themed";
-import { Link, Stack, useLocalSearchParams, useRouter } from "expo-router";
-import products from "../../../../assets/data/products";
+import { Link, Stack, useLocalSearchParams } from "expo-router";
 import { Image, Pressable, ScrollView, StyleSheet } from "react-native";
 import { defaultPizzaImage } from "@/components/modules/ProductListItem";
-import Button from "@/components/ui/Button";
-import { PizzaSize, Product } from "@/types";
-import { useCart } from "@/hooks/useCart";
 import { FontAwesome } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
@@ -57,10 +53,10 @@ const ProductDetailsScreen: React.FC<ProductDetailsScreenProps> = ({}) => {
 
         <Image
           style={styles.image}
-          source={{ uri: product.image || defaultPizzaImage }}
+          source={{ uri: product?.image || defaultPizzaImage }}
         />
-        <Text style={styles.price}>${product.price}</Text>
-        <Text style={styles.title}>{product.name}</Text>
+        <Text style={styles.price}>${product?.price}</Text>
+        <Text style={styles.title}>{product?.name}</Text>
       </ScrollView>
     </View>
   );

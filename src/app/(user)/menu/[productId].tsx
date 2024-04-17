@@ -1,7 +1,6 @@
 import React from "react";
 import { Text, View } from "@/components/Themed";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
-import products from "../../../../assets/data/products";
 import {
   ActivityIndicator,
   Image,
@@ -53,7 +52,7 @@ const ProductDetailsScreen: React.FC<ProductDetailsScreenProps> = ({}) => {
 
         <Image
           style={styles.image}
-          source={{ uri: product.image || defaultPizzaImage }}
+          source={{ uri: product?.image || defaultPizzaImage }}
         />
 
         <Text style={styles.selectLabel}>Select size:</Text>
@@ -84,8 +83,8 @@ const ProductDetailsScreen: React.FC<ProductDetailsScreenProps> = ({}) => {
           ))}
         </View>
 
-        <Text style={styles.price}>${product.price}</Text>
-        <Text style={styles.title}>{product.name}</Text>
+        <Text style={styles.price}>${product?.price}</Text>
+        <Text style={styles.title}>{product?.name}</Text>
         <Button text="Add to cart" onPress={handleAddToCart} />
       </ScrollView>
     </View>
